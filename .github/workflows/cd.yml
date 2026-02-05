@@ -37,15 +37,15 @@ jobs:
         run: npm run build --if-present
 
       - name: Configure GitHub Pages
-        uses: actions/configure-pages@v3
+        uses: actions/configure-pages@v4
 
       - name: Upload artifact for GitHub Pages
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v4
         with:
           path: .
 
       - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v4
 
   notify:
     needs: deploy
@@ -64,7 +64,7 @@ jobs:
 
       - name: Send email notification via SMTP (if configured)
         if: ${{ env.SMTP_HOST }}
-        uses: dawidd6/action-send-mail@v3
+        uses: dawidd6/action-send-mail@v4
         with:
           server_address: ${{ env.SMTP_HOST }}
           server_port: ${{ env.SMTP_PORT }}
@@ -85,7 +85,7 @@ jobs:
           secure: true
 
       - name: Create GitHub issue to notify team
-        uses: actions/github-script@v6
+        uses: actions/github-script@v4
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |

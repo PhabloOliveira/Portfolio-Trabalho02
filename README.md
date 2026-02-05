@@ -1,5 +1,5 @@
-[![CI - PR checks](https://github.com/OWNER/REPO/actions/workflows/ci.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/ci.yml)
-[![CD - Deploy Pages](https://github.com/OWNER/REPO/actions/workflows/cd.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/cd.yml)
+[![CI - PR checks](https://github.com/PhabloOliveira/Portfolio-Trabalho02/actions/workflows/ci.yml/badge.svg)](https://github.com/PhabloOliveira/Portfolio-Trabalho02/actions/workflows/ci.yml)
+[![CD - Deploy Pages](https://github.com/PhabloOliveira/Portfolio-Trabalho02/actions/workflows/cd.yml/badge.svg)](https://github.com/PhabloOliveira/Portfolio-Trabalho02/actions/workflows/cd.yml)
 
 # Esteira de Produção (CI/CD) — Portfólio
 

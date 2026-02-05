@@ -51,18 +51,25 @@ jobs:
     needs: deploy
     runs-on: ubuntu-latest
     if: ${{ needs.deploy.result == 'failure' }}
+    env:
+      SMTP_HOST: ${{ secrets.SMTP_HOST }}
+      SMTP_PORT: ${{ secrets.SMTP_PORT }}
+      SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
+      SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+      NOTIFY_EMAIL_TO: ${{ secrets.NOTIFY_EMAIL_TO }}
+      NOTIFY_EMAIL_FROM: ${{ secrets.NOTIFY_EMAIL_FROM }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Send email notification via SMTP (if configured)
-        if: ${{ secrets.SMTP_HOST != '' }}
+        if: ${{ env.SMTP_HOST }}
         uses: dawidd6/action-send-mail@v3
         with:
-          server_address: ${{ secrets.SMTP_HOST }}
-          server_port: ${{ secrets.SMTP_PORT }}
-          username: ${{ secrets.SMTP_USERNAME }}
-          password: ${{ secrets.SMTP_PASSWORD }}
+          server_address: ${{ env.SMTP_HOST }}
+          server_port: ${{ env.SMTP_PORT }}
+          username: ${{ env.SMTP_USERNAME }}
+          password: ${{ env.SMTP_PASSWORD }}
           subject: "⚠️ Deploy failed on main — ${{ github.repository }}"
           body: |
             The automatic deploy to GitHub Pages failed.
@@ -73,8 +80,8 @@ jobs:
             Commit: ${{ github.sha }}
 
             Please check the Actions logs for details.
-          to: ${{ secrets.NOTIFY_EMAIL_TO }}
-          from: ${{ secrets.NOTIFY_EMAIL_FROM }}
+          to: ${{ env.NOTIFY_EMAIL_TO }}
+          from: ${{ env.NOTIFY_EMAIL_FROM }}
           secure: true
 
       - name: Create GitHub issue to notify team

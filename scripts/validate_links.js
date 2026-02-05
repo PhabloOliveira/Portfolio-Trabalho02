@@ -23,10 +23,11 @@ if(htmlFiles.length===0){
   process.exit(2);
 }
 
-const fetchWithTimeout = (url, timeout = 10000) => {
+const fetchWithTimeout = (url, opts = {}, timeout = 10000) => {
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), timeout);
-  return fetch(url, { method: 'HEAD', signal: controller.signal }).finally(()=>clearTimeout(id));
+  const signal = controller.signal;
+  return fetch(url, Object.assign({}, opts, { signal })).finally(()=>clearTimeout(id));
 };
 
 async function checkUrl(file, u){
@@ -34,11 +35,28 @@ async function checkUrl(file, u){
   if(u.startsWith('http://') || u.startsWith('https://')){
     try{
       let res;
-      try{ res = await fetchWithTimeout(u); }
-      catch(e){ // try GET
-        res = await fetch(u, { method: 'GET' });
+      try{
+        // try HEAD first
+        res = await fetchWithTimeout(u, { method: 'HEAD' }, 10000);
+      } catch(e){
+        // fallback to GET with a browser-like User-Agent and timeout
+        try{
+          res = await fetchWithTimeout(u, { method: 'GET', headers: { 'User-Agent': 'Mozilla/5.0 (compatible; CI/1.0)' } }, 10000);
+        } catch(e2){
+          return {file,u,error: e2.message || 'no-response'};
+        }
       }
-      if(!res || (res.status && res.status>=400)) return {file,u,status:res?res.status:'no-response'};
+
+      // Treat 2xx and 3xx as OK. Many sites return 405 for automated HEAD requests;
+      // treat 405 as non-fatal (warn only) to avoid failing CI on third-party hosts.
+      if(res && res.status){
+        if(res.status === 405){
+          console.warn(`Warning: ${u} returned 405 Method Not Allowed; skipping strict check.`);
+          return null;
+        }
+        if(res.status >= 400) return {file,u,status:res.status};
+      }
+      if(!res) return {file,u,status:'no-response'};
       return null;
     } catch(err){
       return {file,u,error:err.message};

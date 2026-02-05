@@ -43,7 +43,8 @@ jobs:
 
       - name: Scan for forbidden comments/terms
         run: |
-          if grep -RInE --exclude-dir="node_modules" --exclude-dir=".git" 'TODO|FIXME|senha|password' .; then
+          # Exclude documentation and common non-source files to avoid false positives
+          if grep -RInE --exclude-dir="node_modules" --exclude-dir=".git" --exclude="*.md" --exclude="README.md" --exclude-dir="docs" 'TODO|FIXME|senha|password' .; then
             echo "Termos proibidos encontrados (TODO, FIXME, senha, password).";
             exit 1;
           fi

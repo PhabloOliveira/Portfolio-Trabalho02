@@ -39,7 +39,7 @@ Observações
 - O workflow está em `.github/workflows/ci.yml` e é disparado apenas em Pull Requests para `main`.
 - Ajuste links e informações do `index.html` para seu conteúdo real antes de publicar no GitHub Pages.
 
-Observação: substitua `OWNER/REPO` nas URLs do badge pelo caminho do seu repositório (ex: `meuUsuario/meuRepo`).
+Observação: os badges acima apontam para este repositório e mostram o status dos workflows em tempo real.
 
 Notificações por e-mail (opcional)
 

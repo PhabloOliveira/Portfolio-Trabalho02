@@ -1,0 +1,13 @@
+{
+  "name": "portfolio-ci",
+  "version": "1.0.0",
+  "description": "Portfólio pessoal usado para exercício de CI/CD",
+  "scripts": {
+    "lint": "npx htmlhint \"**/*.html\"",
+    "validate-links": "node scripts/validate_links.js",
+    "ci-check": "npm run lint && node scripts/validate_links.js"
+  },
+  "devDependencies": {
+    "htmlhint": "^0.15.0"
+  }
+}
